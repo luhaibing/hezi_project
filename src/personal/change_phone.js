@@ -12,7 +12,7 @@ import {
     Platform,
 } from 'react-native';
 import screen from "../util/screen_util";
-import draws from "../draws";
+import draws from "../util/draws";
 import {
     /* 标题颜色 */
     grey_2b as titleColor,
@@ -45,7 +45,7 @@ class ChangePhone extends Component {
         let data = null;
         return (
             <View style={styles.container}>
-                {screen.renderHeaderTitleView(this, "修改手机号", (
+                {draws.renderHeaderTitleView(this, "修改手机号", (
                     <TouchableOpacity
                         onPress={this.saveChange}>
                         <Text

@@ -21,7 +21,7 @@ import {
     grey_66 as contentColor,
     grey_ec,
 } from "../../colos";
-import draws from "../draws";
+import draws from "../util/draws";
 import DownLoadButton from '../widget/download_button';
 
 class TreasureChest extends Component {
@@ -51,8 +51,7 @@ class TreasureChest extends Component {
                 flex: 1,
                 backgroundColor: '#ffffff'
             }}>
-                {/*{this.renderHeaderTitleView()}*/}
-                {screen.renderHeaderTitleView(this, "应用盒")}
+                {draws.renderHeaderTitleView(this, "应用盒")}
                 {draws.drawDivider()}
                 <FlatList
                     data={datas}
@@ -62,27 +61,6 @@ class TreasureChest extends Component {
             </View>
         );
     }
-
-    /**
-     * 页面标题部分视图
-     * @returns {*}
-     */
-    renderHeaderTitleView = () => {
-        /* 解构获取返回方法的对象 */
-        let {goBack} = this.props.navigation;
-        return (
-            <View style={styles.header_view_container}>
-                <TouchableOpacity
-                    onPress={() =>
-                        goBack()}>
-                    <Image
-                        source={require('../../image/icon_return.png')}
-                        style={styles.back_icon}/>
-                </TouchableOpacity>
-                <Text style={styles.header_view_title}></Text>
-            </View>
-        );
-    };
 
     /* 渲染 item 项视图*/
     renderItemView = (item, index) => {
@@ -97,8 +75,8 @@ class TreasureChest extends Component {
                 }}>
                     <Image
                         // source={{url: 'http://i.imgur.com/UePbdph.jpg'}}
-                        source={require('../../image/gril.jpg')}
-                        placeholder={require('../../image/gril.jpg')}
+                        source={require('../../image/placeholder.jpg')}
+                        placeholder={require('../../image/placeholder.jpg')}
                         style={{
                             width: 60,
                             height: 60,

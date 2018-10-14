@@ -16,7 +16,7 @@ class DownLoadButton extends Component {
         this.state = {
             text: this.props.text,
             progress: -1,
-            loadState: 0,
+            loadState: DownLoad.NONE,
         };
     }
 
@@ -28,7 +28,7 @@ class DownLoadButton extends Component {
         DeviceEventEmitter.addListener(DownLoad.progressEvent, this.onProgressEventListener);
         DeviceEventEmitter.addListener(DownLoad.pauseEvent, this.onPauseEventListener);
         DeviceEventEmitter.addListener(DownLoad.completeEvent, this.onCompleteEventListener);
-        DeviceEventEmitter.addListener(DownLoad.toggleEvent, this.onToggleEventListener)
+        DeviceEventEmitter.addListener(DownLoad.toggleEvent, this.onToggleEventListener);
     }
 
     /**
@@ -59,7 +59,7 @@ class DownLoadButton extends Component {
     /* 下载进度 */
     onProgressEventListener = ({url, completeSize, fileSize}) => {
         if (this.props.url === url) {
-            let p = Math.floor((completeSize / fileSize) * 1000)/10;
+            let p = Math.floor((completeSize / fileSize) * 1000) / 10;
             if (this.state.loadState === 2) {
                 this.setState({
                     text: (p + "%"),
@@ -115,7 +115,7 @@ class DownLoadButton extends Component {
 
     dispatchDownLoadEvent = () => {
         let state = this.state.loadState;
-        if (state === 2 || state === 1) {
+        if (state === DownLoad.INIT || state === DownLoad.START || state === DownLoad.DOWNING) {
             DownLoad.pause(this.props.url);
         } else if (state === 4) {
             // 安装

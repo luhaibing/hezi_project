@@ -9,6 +9,7 @@ import ChangePassWord from "./personal/change_password";
 import ChangePhone from "./personal/change_phone";
 import TreasureChest from "./personal/treasure_chest";
 import MyLevel from "./personal/MyLevel";
+import Authentication from "./personal/Authentication";
 
 export default [
     {
@@ -40,5 +41,9 @@ export default [
         name: '我的等级',
         path: 'my_level',
         link: MyLevel,
+    }, {
+        name: '实名认证',
+        path: 'authentication',
+        link: Authentication,
     }
 ];

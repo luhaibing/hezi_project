@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import {grey_2b as titleColor, grey_66 as contentColor} from '../../colos.json';
 import screen from '../util/screen_util';
-import draws from '../draws';
+import draws from '../util/draws';
 import routes from "../routes";
 
 class PersonalCenter extends Component {
@@ -41,7 +41,7 @@ class PersonalCenter extends Component {
         return (
             <View style={styles.container}>
 
-                {screen.renderHeaderTitleView(this, "个人中心")}
+                {draws.renderHeaderTitleView(this, "个人中心")}
 
                 {draws.drawDivider()}
 
@@ -123,7 +123,7 @@ class PersonalCenter extends Component {
     /* 1.头像 */
     renderHeaderView = (data) => {
         let title = '头像';
-        let url = '../../image/gril.jpg';
+        let url = '../../image/placeholder.jpg';
         let action = () => {
             Alert.alert('头像');
         };

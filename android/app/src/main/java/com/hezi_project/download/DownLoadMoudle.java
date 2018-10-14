@@ -34,10 +34,12 @@ public class DownLoadMoudle extends ReactContextBaseJavaModule {
     /* react-native 代码回调的方法名 */
 
     // 开始下载
+    private static final String INIT = "onInitEvent";
     private static final String START = "onStartEvent";
     private static final String PROGRESS = "onProgressEvent";
     private static final String PAUSE = "onPauseEvent";
     private static final String COMPLETE = "onCompleteEvent";
+    private static final String ERROR = "onErrorEvent";
     private static final String TOGGLE = "onToggleEvent";
 
     private long lastOnClickTime;
@@ -125,10 +127,12 @@ public class DownLoadMoudle extends ReactContextBaseJavaModule {
         HashMap<String, Object> hashMap = new HashMap<>();
 
         /* 事件名 */
+        hashMap.put("initEvent", INIT);
         hashMap.put("startEvent", START);
         hashMap.put("progressEvent", PROGRESS);
         hashMap.put("pauseEvent", PAUSE);
         hashMap.put("completeEvent", COMPLETE);
+        hashMap.put("errorEvent", ERROR);
         hashMap.put("toggleEvent", TOGGLE);
 
         /* 下载状态 */
