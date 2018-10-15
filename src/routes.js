@@ -9,7 +9,7 @@ import ChangePassWord from "./personal/change_password";
 import ChangePhone from "./personal/change_phone";
 import TreasureChest from "./personal/treasure_chest";
 import MyLevel from "./personal/MyLevel";
-import Authentication from "./personal/Authentication";
+import Authentication from "./personal/authentication";
 
 export default [
     {

@@ -5,18 +5,28 @@ import React, {
     Component,
 } from 'react';
 import {
+    Platform,
     StyleSheet,
+    ScrollView,
     View,
     Text,
+    TextInput,
     Image,
     TouchableOpacity,
     Alert,
-    ScrollView, Platform,
+
 } from 'react-native';
 import {grey_2b as titleColor, grey_66 as contentColor} from '../../colos.json';
 import screen from '../util/screen_util';
 import draws from '../util/draws';
 import routes from "../routes";
+import Utils from "../util/utils";
+import ChoiceDialog from "../widget/choice_dialog";
+
+// 性别
+let sexList = [
+    '男', '女', '其他',
+];
 
 class PersonalCenter extends Component {
 
@@ -25,13 +35,13 @@ class PersonalCenter extends Component {
         header: null,
     };
 
-    /**
-     * 页面标题部分视图
-     * @returns {*}
-     */
-    renderHeaderTitleView = () => {
-        return
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            showGenderDialog: false,
+            genderSelect: -1,
+        };
+    }
 
     /* 渲染视图 */
     render() {
@@ -54,6 +64,8 @@ class PersonalCenter extends Component {
 
                     {draws.drawDivider()}
 
+                    {/* 渲染是否选择性别对话框 */}
+                    {this.renderChoiceDialog()}
                     {this.renderGenderView(data)}
 
                     {draws.drawDivider()}
@@ -125,7 +137,7 @@ class PersonalCenter extends Component {
         let title = '头像';
         let url = '../../image/placeholder.jpg';
         let action = () => {
-            Alert.alert('头像');
+            Utils.alert('头像');
         };
         return (
             <View
@@ -154,22 +166,60 @@ class PersonalCenter extends Component {
 
     /* 昵称 */
     renderNickNameView = (data) => {
-        return this.commonItemView('昵称', "盒子盒子", () => {
-            Alert.alert('昵称');
-        });
+        let title = '昵称';
+        let content = '盒子盒子11';
+        let action = () => {
+            Utils.alert('昵称');
+        };
+        return (
+            <View
+                style={styles.item_container}>
+                <Text style={styles.item_title}>{title}</Text>
+                <View style={styles.space}/>
+                <TouchableOpacity
+                    onPress={action}
+                    style={styles.touchable_area}>
+                    <TextInput
+                        style={styles.item_content_text_input}
+                        value={content}
+                        onEndEditing={() => {
+                            // TODO 待接入逻辑
+                            Utils.alert("输入结束,通过网络修改昵称")
+                        }}/>
+                    <Image
+                        style={styles.item_icon_more}
+                        source={require('../../image/icon_more.png')}/>
+                </TouchableOpacity>
+            </View>
+        )
+    };
+
+
+    /* 获取性别的文字显示 */
+    getGenderText = () => {
+        let {genderSelect} = this.state;
+        switch (genderSelect) {
+            case 0:
+            case 1:
+            case 2:
+                return sexList[genderSelect];
+            default:
+            case -1:
+                return "请选择";
+        }
     };
 
     /* 性别 */
     renderGenderView = (data) => {
-        return this.commonItemView('性别', '请选择', () => {
-            Alert.alert('性别');
+
+        return this.commonItemView('性别', this.getGenderText(), () => {
+            this.toggleDialogVisiable(true);
         });
     };
 
     /* 密码 */
     renderPassWordView = (data) => {
         return this.commonItemView('密码', '未设置', () => {
-            // Alert.alert('密码');
             let {navigate} = this.props.navigation;
             navigate(routes[2].path)
         });
@@ -178,7 +228,6 @@ class PersonalCenter extends Component {
     /* 手机号 */
     renderPhonedView = (data) => {
         return this.commonItemView('手机号', '13037158118', () => {
-            // Alert.alert('密码');
             let {navigate} = this.props.navigation;
             navigate(routes[3].path)
         });
@@ -187,30 +236,65 @@ class PersonalCenter extends Component {
     /* 微信绑定 */
     renderWeiXinView = (data) => {
         return this.commonItemView('微信绑定', '未绑定', () => {
-            Alert.alert('微信绑定');
+            Utils.alert('微信绑定');
         });
     };
 
     /* 2.微博绑定 */
     renderMaihoView = (data) => {
         return this.commonItemView('微博绑定', '狂人', () => {
-            Alert.alert('狂人');
+            Utils.alert('狂人');
         }, false);
     };
 
     /* 我的等级 */
     renderLevelView = (data) => {
         return this.commonItemView('我的等级', 'Lv1', () => {
-            Alert.alert('我的等级');
+            Utils.alert('我的等级');
         });
     };
 
     /* 实名认证 */
     renderRealNameView = (data) => {
         return this.commonItemView('实名认证', '未认证', () => {
-            Alert.alert('实名认证');
+            let {navigate} = this.props.navigation;
+            navigate(routes[6].path)
         });
     };
+
+
+    //////////////////////////////////////////////////////
+
+    /* 设置状态标记是否显示选择对话框 */
+    toggleDialogVisiable = (visible: Boolean = false) => {
+        this.setState({
+            showGenderDialog: visible,
+        })
+    };
+
+    /* 渲染选择性别的对话框 */
+    renderChoiceDialog = () => {
+        let {showGenderDialog} = this.state;
+        if (!showGenderDialog) {
+            return null;
+        }
+        let {genderSelect} = this.state;
+        return (
+            <ChoiceDialog
+                data={sexList}
+                toggleVisiable={this.toggleDialogVisiable}
+                setSelect={this.setSelect}
+                select={genderSelect}/>
+        );
+    };
+
+    /* 设置选择的证件类型 */
+    setSelect = ({item, index}) => {
+        this.toggleDialogVisiable(false);
+        this.setState({
+            genderSelect: index,
+        });
+    }
 
 }
 
@@ -272,6 +356,11 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: contentColor,
     },
+    item_content_text_input: {
+        fontSize: 14,
+        color: contentColor,
+    },
+
 
     /* item 中的响应点击区域 */
     touchable_area: {

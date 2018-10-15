@@ -12,13 +12,21 @@ import {
     Image,
     TouchableOpacity,
     TextInput,
+    FlatList,
+    Alert,
+    Modal,
 } from 'react-native';
 import {grey_2b as titleColor} from "../../colos";
 import draws from "../util/draws";
 import Utils from "../util/utils";
 import colors from '../util/colors';
 import screen from '../util/screen_util';
-import UpLoadComponent from "../widget/upload_component";
+import ChoiceDialog from "../widget/choice_dialog";
+
+/* 证件类型 */
+let types = [
+    '身份证', '港澳通行证', '驾驶证'
+];
 
 class Authentication extends Component {
 
@@ -29,9 +37,11 @@ class Authentication extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            certificate_type: 0,
-            certificate_name: '',
-            certificate_number: '',
+            certificate_typeText: '',   // 证件类型文字
+            certificate_type: -1,        // 证件类型简码[暂不确定为数字还是字符串]
+            certificate_name: '',       // 证件名字
+            certificate_number: '',     // 证件号码
+            showDialog: false,          // 是否事件证件选择的对话框
         };
     }
 
@@ -50,6 +60,7 @@ class Authentication extends Component {
                         >提交</Text>
                     </TouchableOpacity>
                 ))}
+                {this.renderChoiceDialog()}
                 {/*{draws.drawDivider()}*/}
                 <ScrollView style={{
                     // flex: 1,
@@ -68,11 +79,13 @@ class Authentication extends Component {
                     {this.renderCertificatePhotoWithSelfView()}
                 </ScrollView>
             </View>
-        );
+        )
+            ;
     }
 
     /* 渲染证件类型 */
     renderTypeOfCertificateView = () => {
+        let {certificate_typeText} = this.state;
         return (
             <TouchableOpacity
                 onPress={() => {
@@ -83,6 +96,7 @@ class Authentication extends Component {
                     <View style={{
                         flex: 1,
                     }}/>
+                    <Text>{certificate_typeText}</Text>
                     <Image
                         source={require('../../image/icon_more.png')}
                         style={{
@@ -221,41 +235,73 @@ class Authentication extends Component {
 
     /* 证件类型 */
     choiceTypeOfCertificate = () => {
-        Utils.alert("证件类型")
+        this.toggleDialogVisiable(true);
     };
 
 
+    /* 设置状态标记是否显示选择对话框 */
+    toggleDialogVisiable = (visible: Boolean = false) => {
+        this.setState({
+            showDialog: visible,
+        })
+    };
+
+    /* 渲染选择性别的对话框 */
+    renderChoiceDialog = () => {
+        let {showDialog} = this.state;
+        if (!showDialog) {
+            return null;
+        }
+        let {certificate_type} = this.state;
+        return (
+            <ChoiceDialog
+                data={types}
+                toggleVisiable={this.toggleDialogVisiable}
+                setSelect={this.setSelect}
+                select={certificate_type}/>
+        );
+    };
+
+    /* 设置选择的证件类型 */
+    setSelect = ({item, index}) => {
+        this.toggleDialogVisiable(false);
+        this.setState({
+            certificate_typeText: item,
+            certificate_type: index,
+        });
+    }
 }
 
 let PHOTO_WIDTH = 160;
 
-const styles = StyleSheet.create({
-    root_contianer: {
-        flex: 1,
-        backgroundColor: screen.globalBackgroundColor,
-    },
-    // 说明
-    title_description: {
-        fontSize: 13,
-        color: colors.red_2a,
-        paddingLeft: 15,
-        paddingTop: 12,
-        paddingRight: 9,
-        paddingBottom: 12,
-        backgroundColor: colors.grey_ec,
-    },
-    item_container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 6,
-        height: 55,
-        paddingLeft: 15,
-        paddingRight: 15,
-    },
-    item_title: {
-        fontSize: 15,
-        color: colors.grey_2b,
-    },
-});
+const
+    styles = StyleSheet.create({
+        root_contianer: {
+            flex: 1,
+            backgroundColor: screen.globalBackgroundColor,
+        },
+        // 说明
+        title_description: {
+            fontSize: 13,
+            color: colors.red_2a,
+            paddingLeft: 15,
+            paddingTop: 12,
+            paddingRight: 9,
+            paddingBottom: 12,
+            backgroundColor: colors.grey_ec,
+        },
+        item_container: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: 6,
+            height: 55,
+            paddingLeft: 15,
+            paddingRight: 15,
+        },
+        item_title: {
+            fontSize: 15,
+            color: colors.grey_2b,
+        },
+    });
 
 export default Authentication;
