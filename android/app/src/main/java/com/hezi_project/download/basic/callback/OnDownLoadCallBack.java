@@ -52,6 +52,13 @@ public interface OnDownLoadCallBack {
     void onComplete(String url, String filePath);
 
     /**
+     * 出现异常
+     * @param url
+     * @param e
+     */
+    void onError(String url,Exception e);
+
+    /**
      * 下载器对象切换下载状态
      *
      * @param url      网络资源定位符

@@ -20,15 +20,17 @@ public class DownloadTask extends AsyncTask<String, Void, LoadInfo> {
     private static final String TAG = DownloadTask.class.getSimpleName();
 
     private Map<String, DownLoader> hashMap;
+    private Map<String, String> keyMap;
     // 同时开启的线程数
     private String parentPath;
     private OnDownLoadCallBack onDownLoadCallBack;
     @SuppressLint("StaticFieldLeak")
     private Context context;
 
-    public DownloadTask(Map<String, DownLoader> hashMap, String parentPath,
+    public DownloadTask(Map<String, DownLoader> hashMap, Map<String, String> keyMap, String parentPath,
                         OnDownLoadCallBack onDownLoadCallBack, Context context) {
         this.hashMap = hashMap;
+        this.keyMap = keyMap;
         this.parentPath = parentPath;
         this.onDownLoadCallBack = onDownLoadCallBack;
         this.context = context;
@@ -42,7 +44,7 @@ public class DownloadTask extends AsyncTask<String, Void, LoadInfo> {
      */
     @Override
     protected LoadInfo doInBackground(String... params) {
-        if (params.length != 1) {
+        if (params.length < 1) {
             throw new IllegalArgumentException("文件路径有误");
         }
         String url = params[0];
@@ -51,13 +53,20 @@ public class DownloadTask extends AsyncTask<String, Void, LoadInfo> {
         DownLoader loader = hashMap.get(url);
         if (loader == null) {
             loader = new DownLoader(url, fileName, COUNT_THREAD, context, onDownLoadCallBack);
-            hashMap.put(url, loader);
+            saveToMap(url, loader, params[1]);
         }
         if (loader.isStarted()) {
             return null;
         }
         // 得到下载信息类的个数组成集合
         return loader.getDownloaderInfors();
+    }
+
+    private void saveToMap(String url, DownLoader loader, String key) {
+        hashMap.put(url, loader);
+        if (key!=null) {
+            keyMap.put(url, key);
+        }
     }
 
 

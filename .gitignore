@@ -4,6 +4,9 @@
 
 build/
 
+test/
+test.js
+
 # Xcode
 #
 *.pbxuser

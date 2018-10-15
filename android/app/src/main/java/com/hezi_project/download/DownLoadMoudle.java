@@ -1,6 +1,7 @@
 package com.hezi_project.download;
 
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -44,8 +45,14 @@ public class DownLoadMoudle extends ReactContextBaseJavaModule {
 
     private long lastOnClickTime;
     private Map<String, DownLoader> loaderMap = new HashMap<>();
+    private Map<String, String> keyMap = new HashMap<>();
 
     private OnDownLoadCallBack onDownLoadCallBack = new OnDownLoadCallBackAdapter() {
+
+        private String getKey(@NonNull String url) {
+            String key = keyMap.get(url);
+            return key != null ? key : "";
+        }
 
         @Override
         public void onStart(String url, int completeSize) {
@@ -53,7 +60,8 @@ public class DownLoadMoudle extends ReactContextBaseJavaModule {
             WritableMap map = Arguments.createMap();
             map.putString("url", url);
             map.putInt("completeSize", completeSize);
-            emitEvent(START, map);
+            // emitEvent(START, map);
+            emitEvent(START + getKey(url), map);
         }
 
         @Override
@@ -62,7 +70,8 @@ public class DownLoadMoudle extends ReactContextBaseJavaModule {
             WritableMap map = Arguments.createMap();
             map.putString("url", url);
             map.putInt("completeSize", completeSize);
-            emitEvent(PAUSE, map);
+            // emitEvent(PAUSE, map);
+            emitEvent(PAUSE + getKey(url), map);
         }
 
         @Override
@@ -75,7 +84,8 @@ public class DownLoadMoudle extends ReactContextBaseJavaModule {
             map.putString("url", url);
             map.putInt("completeSize", completeSize);
             map.putInt("fileSize", fileSize);
-            emitEvent(PROGRESS, map);
+            // emitEvent(PROGRESS, map);
+            emitEvent(PROGRESS + getKey(url), map);
         }
 
         @Override
@@ -84,8 +94,11 @@ public class DownLoadMoudle extends ReactContextBaseJavaModule {
             WritableMap map = Arguments.createMap();
             map.putString("url", url);
             map.putString("filePath", filePath);
-            emitEvent(COMPLETE, map);
+            // emitEvent(COMPLETE, map);
+            emitEvent(COMPLETE + getKey(url), map);
             loaderMap.remove(url);
+            keyMap.remove(url);
+            Log.e("TAG", "onComplete 2: ");
         }
 
         @Override
@@ -95,7 +108,28 @@ public class DownLoadMoudle extends ReactContextBaseJavaModule {
             map.putString("url", url);
             map.putInt("previousState", previous.getValue());
             map.putInt("currentState", current.getValue());
-            emitEvent(TOGGLE, map);
+            // emitEvent(TOGGLE, map);
+            emitEvent(TOGGLE + getKey(url), map);
+        }
+
+        @Override
+        public void initialize(String url, int fileSize, int completeSize) {
+            super.initialize(url, fileSize, completeSize);
+            WritableMap map = Arguments.createMap();
+            map.putString("url", url);
+            // emitEvent(INIT, map);
+            emitEvent(INIT + getKey(url), map);
+        }
+
+        @Override
+        public void onError(String url, Exception e) {
+            super.onError(url
+                    ,e);
+            WritableMap map = Arguments.createMap();
+            map.putString("url", url);
+            map.putString("error", e.toString());
+            // emitEvent(ERROR, map);
+            emitEvent(ERROR + getKey(url), map);
         }
     };
 
@@ -151,21 +185,23 @@ public class DownLoadMoudle extends ReactContextBaseJavaModule {
      * 启动一个下载任务
      *
      * @param url 任务的地址
+     * @param key 用于标记的键[应请确认都为唯一值]
      */
     @ReactMethod
-    public void start(String url) {
+    public void start(String url, String key) {
         Log.e(TAG, "start task.--> url : " + url);
-        new DownloadTask(loaderMap, Environment.getExternalStorageDirectory().getPath(),
-                onDownLoadCallBack, getReactApplicationContext()).execute(url);
+        new DownloadTask(loaderMap, keyMap, Environment.getExternalStorageDirectory().getPath(),
+                onDownLoadCallBack, getReactApplicationContext()).execute(url, key);
     }
 
     /**
      * 暂停一个指定的下载任务
      *
      * @param url 任务的地址
+     * @param key 用于标记的键[应请确认都为唯一值]
      */
     @ReactMethod
-    public void pause(String url) {
+    public void pause(String url, String key) {
         DownLoader downLoader = loaderMap.get(url);
         if (downLoader != null) {
             downLoader.pause();

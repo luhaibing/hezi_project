@@ -33,6 +33,11 @@ public class OnDownLoadCallBackAdapter implements OnDownLoadCallBack {
     }
 
     @Override
+    public void onError(String url,Exception e) {
+
+    }
+
+    @Override
     public void toggleState(String url, DownLoadState previous, DownLoadState current) {
 
     }

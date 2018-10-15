@@ -1,6 +1,7 @@
 package com.hezi_project.download.basic;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.hezi_project.Util;
 import com.hezi_project.download.basic.callback.OnStateCallBack;
@@ -100,8 +101,14 @@ public class DownLoadThread extends Thread {
      * @param length 当次写入的数据长度
      */
     private void updateProgress(String urlstr, int length) {
-        // 更新数据库中的下载信息
-        Dao.getInstance(mStateCallBack.getContext()).updataInfos(threadId, compeleteSize, urlstr);
+
+        try {
+            // 更新数据库中的下载信息
+            Dao.getInstance(mStateCallBack.getContext()).updataInfos(threadId, compeleteSize, urlstr);
+        } catch (Exception e) {
+            // e.printStackTrace();
+            mStateCallBack.deliverException(urlstr, e);
+        }
         mStateCallBack.updateProgress(urlstr, length);
     }
 

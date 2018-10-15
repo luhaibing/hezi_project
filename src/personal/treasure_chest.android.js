@@ -23,6 +23,7 @@ import {
 } from "../../colos";
 import draws from "../util/draws";
 import DownLoadButton from '../widget/download_button';
+import Utils from "../util/utils";
 
 class TreasureChest extends Component {
 
@@ -73,6 +74,7 @@ class TreasureChest extends Component {
                     paddingLeft: 15,
                     paddingRight: 15,
                 }}>
+
                     <Image
                         // source={{url: 'http://i.imgur.com/UePbdph.jpg'}}
                         source={require('../../image/placeholder.jpg')}
@@ -135,7 +137,8 @@ class TreasureChest extends Component {
                             textAlign: 'center',
                             paddingTop: 3.5,
                         }}
-                        text="下载"
+                        text={'下载'}
+                        keyValue={index.toString()}
                         url={item.path}/>
                 </View>
                 {draws.drawDivider()}

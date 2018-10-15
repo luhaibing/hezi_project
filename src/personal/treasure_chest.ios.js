@@ -22,7 +22,6 @@ import {
     grey_ec,
 } from "../../colos";
 import draws from "../util/draws";
-import DownLoadButton from '../widget/download_button';
 
 class TreasureChest extends Component {
 

@@ -54,7 +54,7 @@ public class DownLoader implements OnStateCallBack {
      * 如果不是第一次下载，那就要从数据库中读出之前下载的信息（起始位置，结束为止，文件大小等），并将下载信息返回给下载器
      */
     public LoadInfo getDownloaderInfors() {
-        toggleState(DownLoadState.START);
+        toggleState(DownLoadState.INIT, urlstr);
         if (isFirst(urlstr)) {
             Log.v("TAG", "isFirst");
             init();
@@ -68,13 +68,23 @@ public class DownLoader implements OnStateCallBack {
                     fileSize - 1, 0, urlstr);
             infos.add(info);
             //保存infos中的数据到数据库
-            Dao.getInstance(context).saveInfos(infos);
+            try {
+                Dao.getInstance(context).saveInfos(infos);
+            } catch (Exception e) {
+                // e.printStackTrace();
+                invokeListenerOnException(e);
+            }
             //创建一个LoadInfo对象记载下载器的具体信息
             loadInfo = new LoadInfo(fileSize, 0, urlstr, filePath);
 
         } else {
             //得到数据库中已有的urlstr的下载器的具体信息
-            infos = Dao.getInstance(context).getInfos(urlstr);
+            try {
+                infos = Dao.getInstance(context).getInfos(urlstr);
+            } catch (Exception e) {
+                // e.printStackTrace();
+                invokeListenerOnException(e);
+            }
             Log.v("TAG", "not isFirst size=" + infos.size());
             int size = 0;
             int compeleteSize = 0;
@@ -93,7 +103,13 @@ public class DownLoader implements OnStateCallBack {
      * 判断是否是第一次 下载
      */
     private boolean isFirst(String urlstr) {
-        return Dao.getInstance(context).isHasInfors(urlstr);
+        try {
+            return Dao.getInstance(context).isHasInfors(urlstr);
+        } catch (Exception e) {
+            // e.printStackTrace();
+            invokeListenerOnException(e);
+            return false;
+        }
     }
 
     /**
@@ -158,7 +174,22 @@ public class DownLoader implements OnStateCallBack {
         }
     }
 
+    private void toggleState(DownLoadState state, String url) {
+        DownLoadState lastState = this.loadState;
+        this.loadState = state;
+        if (checkListener()) {
+            onDownLoadListener.toggleState(url, lastState, state);
+        }
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void invokeListenerOnException(Exception e) {
+        toggleState(DownLoadState.ERROR);
+        if (checkListener()) {
+            onDownLoadListener.onError(loadInfo.getUrl(), e);
+        }
+    }
 
     private void invokeListenerOnStart() {
         if (checkListener()) {
@@ -176,7 +207,12 @@ public class DownLoader implements OnStateCallBack {
     }
 
     @Override
-    public boolean checkIsComplete(String urlstr, String filePath, int threadId) {
+    public void deliverException(String url, Exception e) {
+        invokeListenerOnException(e);
+    }
+
+    @Override
+    public boolean checkIsComplete(String url, String filePath, int threadId) {
         boolean b = loadInfo.checkIsComplete();
         if (b) {
             invokeListenerOnComplete();
@@ -185,8 +221,9 @@ public class DownLoader implements OnStateCallBack {
     }
 
     private void invokeListenerOnComplete() {
+        toggleState(DownLoadState.COMPLETE);
+        Log.e("TAG", "onComplete 1 : ");
         if (checkListener()) {
-            toggleState(DownLoadState.COMPLETE);
             onDownLoadListener.onComplete(loadInfo.getUrl(), loadInfo.getFilePath());
         }
         delete(loadInfo.getUrl());
@@ -198,7 +235,11 @@ public class DownLoader implements OnStateCallBack {
      * @param urlstr 网络资源定位符
      */
     public void delete(String urlstr) {
-        Dao.getInstance(context).delete(urlstr);
+        try {
+            Dao.getInstance(context).delete(urlstr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -215,7 +256,7 @@ public class DownLoader implements OnStateCallBack {
     @Override
     public boolean isStarted() {
         return loadState == DownLoadState.INIT || loadState == DownLoadState.START
-                        || loadState == DownLoadState.DOWNING;
+                || loadState == DownLoadState.DOWNING;
     }
 
     @Override

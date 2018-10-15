@@ -1,4 +1,5 @@
 import {NativeModules} from 'react-native';
+import Utils from "./utils";
 
 const Loader = NativeModules.DownLoad;
 
@@ -47,6 +48,7 @@ let {
     toggleEvent
 } = Loader;
 
+/* 状态常量 */
 let {
     NONE,
     INIT,
@@ -56,6 +58,11 @@ let {
     COMPLETE,
     ERROR,
 } = Loader;
+
+
+function wrapperEventTypeName(eventType, key) {
+    return eventType + (Utils.isNullOrUndefined(key) ? key : '');
+}
 
 const DownLoad = {
 
@@ -71,6 +78,7 @@ const DownLoad = {
     completeEvent,
     errorEvent,
     toggleEvent,
+    wrapperEventTypeName,
 
     NONE,
     INIT,

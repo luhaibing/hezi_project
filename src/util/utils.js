@@ -37,6 +37,10 @@ function isNullOrUndefined(obj) {
     return !(obj === undefined || obj === null);
 }
 
+function isNullOrUndefined2(obj) {
+    return (obj === undefined || obj === null);
+}
+
 /**
  * 有价值
  * 检查是否为有效数据
@@ -45,7 +49,8 @@ function isNullOrUndefined(obj) {
  * @returns {boolean}
  */
 function isValuable(obj) {
-    return isNullOrUndefined(obj) && !(obj.toString().trim().length === 0);
+    // return isNullOrUndefined(obj) && !(obj.toString().trim().length === 0);
+    return !isNullOrUndefined2(obj) && !(obj.toString().trim().length === 0);
 }
 
 /**
@@ -107,6 +112,7 @@ const Utils = {
     alert,
     isEqual,
     isNullOrUndefined,
+    isNullOrUndefined2,
     isValuable,
     checkValueLength,
     saveState,

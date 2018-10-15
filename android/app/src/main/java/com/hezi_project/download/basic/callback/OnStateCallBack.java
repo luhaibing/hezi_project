@@ -38,6 +38,12 @@ public interface OnStateCallBack {
     void updateProgress(String url, int length);
 
     /**
+     * 传递异常
+     * @param e
+     */
+    void deliverException(String url,Exception e);
+
+    /**
      * 检查文件是否已经下载完成
      *
      * @param urlstr   文件的资源路径
