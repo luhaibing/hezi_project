@@ -4,6 +4,7 @@
  */
 import React, {Component} from 'react';
 import {
+    Platform,
     StyleSheet,
     View,
     Text,
@@ -167,12 +168,13 @@ const styles = StyleSheet.create({
         // height: top_navigation_height,
     },
     linearGradient: {
-        height: top_navigation_height,
+        height: top_navigation_height + (Platform.OS === "ios" ? 30 : 0),
         left: 0,
         top: 0,
         width: screen.width,
         flexDirection: 'row',
         alignItems: 'center',
+        paddingTop: (Platform.OS === "ios" ? 30 : 0)
     },
     top_navigation_icon_search: {
         width: 17.3,

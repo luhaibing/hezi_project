@@ -13,16 +13,8 @@ import {
 } from 'react-native';
 import screen from "../util/screen_util";
 import draws from "../util/draws";
-import {
-    /* 标题颜色 */
-    grey_2b as titleColor,
-    /* 内容颜色 */
-    grey_66 as contentColor,
-    /* 提示颜色 */
-    grey_d8 as hintColor,
-    grey_ec,
-} from "../../colos";
 import Util from '../util/utils';
+import colors from '../util/colors';
 
 class ChangePhone extends Component {
 
@@ -30,6 +22,7 @@ class ChangePhone extends Component {
         header: null,
     };
 
+    /* 构造函数 */
     constructor(props) {
         super(props);
         this.state = {
@@ -48,25 +41,13 @@ class ChangePhone extends Component {
                 {draws.renderHeaderTitleView(this, "修改手机号", (
                     <TouchableOpacity
                         onPress={this.saveChange}>
-                        <Text
-                            style={{
-                                fontSize: 15, color: titleColor,
-                                marginRight: 15,
-                            }}
+                        <Text style={styles.submit_title}
                         > 确定</Text>
                     </TouchableOpacity>
                 ))}
                 {draws.drawDivider()}
-                <Text style={{
-                    height: 35,
-                    width: screen.width,
-                    textAlign: 'left',
-                    fontSize: 13,
-                    paddingTop: 8,
-                    paddingLeft: 16,
-                    backgroundColor: grey_ec,
-                    color: contentColor,
-                }}>验证即可登录，未注册用户根据手机号自动创建</Text>
+                <Text style={styles.top_hint_title}>
+                    验证即可登录，未注册用户根据手机号自动创建</Text>
                 {draws.drawDivider()}
 
                 {this.renderPhoneNumber(data)}
@@ -99,44 +80,23 @@ class ChangePhone extends Component {
      */
     renderVerificationCodeView = (data, flag = false) => {
         return (
-            <View style={{
-                width: screen.width,
-                height: 50,
-                paddingLeft: 18,
-                paddingRight: 18,
-                flexDirection: 'row',
-                alignItems: 'center',
-            }}>
-                <Text style={{
-                    width: 68,
-                    height: 20,
-                    fontSize: 16,
-                    color: titleColor,
-                    // backgroundColor: '#ffffff',
-                }}>验证码</Text>
-
+            <View style={styles.item_container_outside}>
+                <Text style={styles.item_title}>验证码</Text>
                 <View
-                    style={{
-                        flex: 1,
-                        height: 48,
-                        // backgroundColor: '#fa8c35',
-                    }}>
-                    <View style={{flexDirection: 'row'}}>
+                    style={styles.item_container_inside}>
+                    <View style={styles.item_input_container}>
                         <TextInput
-                            ref='verification_code'
+                            placeholderTextColor={colors.grey_d8}
                             placeholder={`请输入验证码`}
-                            style={{
-                                flex: 1,
-                                hintColor: hintColor,
-                            }}
+                            style={[styles.text_input,
+                                {placeholderTextColor: colors.red_2a}
+                            ]}
                             onChangeText={(txt) => {
                                 this.saveVerificationCode(txt, flag);
                             }}
                         />
                         <TouchableOpacity
-                            style={{
-                                alignSelf: 'center',
-                            }}
+                            style={styles.seletCenter}
                             onPress={() => {
                                 this.getVerificationCodeByNetWork(flag);
                             }}>
@@ -159,37 +119,22 @@ class ChangePhone extends Component {
      */
     renderInputPhoneView = () => {
         return (
-            <View style={{
-                width: screen.width,
-                height: 50,
-                paddingLeft: 18,
-                paddingRight: 18,
-                flexDirection: 'row',
-                alignItems: 'center',
-            }}>
-                <Text style={{
-                    width: 68,
-                    height: 20,
-                    fontSize: 16,
-                    color: titleColor,
-                    // backgroundColor: '#ffffff',
-                }}>新手机号</Text>
-                <View
-                    style={{
-                        flex: 1,
-                        height: 48,
-                        // backgroundColor: '#fa8c35',
-                    }}>
-                    <TextInput
-                        placeholder='请输入手机号码'
-                        style={{
-                            flex: 1,
-                            hintColor: hintColor,
-                        }}
-                        onChangeText={(txt) => {
-                            this.savePhoneNumber(txt, true);
-                        }}
-                    />
+            <View style={styles.item_container_outside}>
+                <Text style={styles.item_title}>新手机号</Text>
+                <View style={styles.item_container_inside}>
+                    <View style={styles.item_input_container}>
+                        <Text style={styles.phone_number_prefix}>+86</Text>
+                        <TextInput
+                            placeholderTextColor={colors.grey_d8}
+                            placeholder='请输入手机号码'
+                            style={[styles.text_input,
+                                {placeholderTextColor: colors.red_2a}
+                            ]}
+                            onChangeText={(txt) => {
+                                this.savePhoneNumber(txt, true);
+                            }}
+                        />
+                    </View>
                     {draws.drawDivider(screen.divider, screen - 68 - 30)}
                 </View>
 
@@ -260,6 +205,8 @@ class ChangePhone extends Component {
 
 }
 
+let ITEM_HEIGHT = 48;
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -283,18 +230,78 @@ const styles = StyleSheet.create({
         marginLeft: 16.3,
     },
     header_view_title: {
-        color: titleColor,
+        color: colors.grey_2b,
         fontSize: 17,
     },
     item_phone: {
         marginTop: 20,
         marginBottom: 16,
         fontSize: 15,
-        color: contentColor,
+        color: colors.grey_66,
     },
     getVerification_text: {
         fontSize: 15,
         color: '#FF2E2A',
+    },
+    /* 顶部提交按钮 */
+    submit_title: {
+        fontSize: 15,
+        color: colors.grey_2b,
+        marginRight: 15,
+    },
+    /* 顶部提示按钮 */
+    top_hint_title: {
+        height: 35,
+        width: screen.width,
+        textAlign: 'left',
+        fontSize: 13,
+        paddingTop: 8,
+        paddingLeft: 16,
+        backgroundColor: colors.grey_ec,
+        color: colors.grey_66,
+    },
+    /* 每个横向的 item 容器的风格样式 */
+    item_container_outside: {
+        width: screen.width,
+        height: 50,
+        paddingLeft: 18,
+        paddingRight: 18,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    item_container_inside: {
+        flex: 1,
+        height: ITEM_HEIGHT,
+    },
+    /* 每个横向的 item 的标题的风格样式 */
+    item_title: {
+        width: 68,
+        height: 20,
+        fontSize: 16,
+        marginRight: 13,
+        color: colors.grey_2b,
+    },
+    /* 文字输入 */
+    text_input: {
+        flex: 1,
+        // hintColor: colors.grey_d8,
+        // placeholderTextColor: colors.grey_d8,
+    },
+    /* 文字输入框的直接外层 */
+    item_input_container: {
+        flexDirection: 'row',
+        height: ITEM_HEIGHT - screen.divider
+    },
+    /* 自我居中 */
+    seletCenter: {
+        alignSelf: 'center',
+    },
+    phone_number_prefix:{
+        width: 30,
+        height: 16,
+        fontSize: 15,
+        alignSelf: 'center',
+        marginRight:11,
     }
 });
 

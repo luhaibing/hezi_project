@@ -13,16 +13,8 @@ import {
 } from 'react-native';
 import screen from "../util/screen_util";
 import draws from "../util/draws";
-import {
-    /* 标题颜色 */
-    grey_2b as titleColor,
-    /* 内容颜色 */
-    grey_66 as contentColor,
-    /* 提示颜色 */
-    grey_d8 as hintColor,
-    grey_ec,
-} from "../../colos";
 import Util from '../util/utils';
+import colors from "../util/colors";
 
 class ChangePassWord extends Component {
 
@@ -48,11 +40,7 @@ class ChangePassWord extends Component {
                 {draws.renderHeaderTitleView(this, "修改密码", (
                     <TouchableOpacity
                         onPress={this.saveChange}>
-                        <Text
-                            style={{
-                                fontSize: 15, color: titleColor,
-                                marginRight: 15,
-                            }}
+                        <Text style={styles.submit_title}
                         >确定</Text>
                     </TouchableOpacity>
                 ))}
@@ -88,44 +76,22 @@ class ChangePassWord extends Component {
      */
     renderVerificationCodeView = (data, flag = false) => {
         return (
-            <View style={{
-                width: screen.width,
-                height: 50,
-                paddingLeft: 18,
-                paddingRight: 18,
-                flexDirection: 'row',
-                alignItems: 'center',
-            }}>
-                <Text style={{
-                    width: 68,
-                    height: 20,
-                    fontSize: 16,
-                    color: titleColor,
-                    // backgroundColor: '#ffffff',
-                }}>验证码</Text>
+            <View style={styles.item_container_outside}>
+                <Text style={styles.item_title}>验证码</Text>
 
                 <View
-                    style={{
-                        flex: 1,
-                        height: 48,
-                        // backgroundColor: '#fa8c35',
-                    }}>
-                    <View style={{flexDirection: 'row'}}>
+                    style={styles.item_container_inside}>
+                    <View style={styles.item_input_container}>
                         <TextInput
-                            ref='verification_code'
                             placeholder='请输入验证码'
-                            style={{
-                                flex: 1,
-                                hintColor: hintColor,
-                            }}
+                            placeholderTextColor={colors.grey_d8}
+                            style={styles.text_input}
                             onChangeText={(txt) => {
                                 this.saveVerificationCode(txt, false);
                             }}
                         />
                         <TouchableOpacity
-                            style={{
-                                alignSelf: 'center',
-                            }}
+                            style={styles.seletCenter}
                             onPress={() => {
                                 this.getVerificationCodeByNetWork();
                             }}>
@@ -150,46 +116,25 @@ class ChangePassWord extends Component {
      */
     renderInputPassWordView = (data, flag: Boolean = false) => {
         return (
-            <View style={{
-                width: screen.width,
-                height: 50,
-                // flex: 1,
-                // backgroundColor: '#ff4777',
-                paddingLeft: 18,
-                paddingRight: 18,
-                flexDirection: 'row',
-                alignItems: 'center',
-            }}>
-                <Text style={{
-                    width: 68,
-                    height: 20,
-                    fontSize: 16,
-                    color: titleColor,
-                    // backgroundColor: '#ffffff',
-                }}>{flag ? '确认密码' : '新密码'}</Text>
+            <View style={styles.item_container_outside}>
+                <Text style={styles.item_title}>
+                    {flag ? '确认密码' : '新密码'}</Text>
 
                 <View
-                    style={{
-                        flex: 1,
-                        height: 48,
-                        // backgroundColor: '#fa8c35',
-                    }}>
-                    <View style={{flexDirection: 'row'}}>
+                    style={styles.item_container_inside}>
+                    <View style={styles.item_input_container}>
                         <TextInput
-                            ref='verification_code'
+                            placeholderTextColor={colors.grey_d8}
                             maxLength={20}
                             placeholder={flag ? '请再次输入新密码' : '请输入新密码'}
-                            style={{
-                                flex: 1,
-                                hintColor: hintColor,
-                            }}
+                            style={styles.text_input}
                             secureTextEntry={true}
                             onChangeText={(txt) => {
                                 this.savePassWord(txt, flag);
                             }}
                         />
                     </View>
-                    {draws.drawDivider(screen.divider, screen - 68 - 30)}
+                    {draws.drawDivider(screen.divider, screen.width - 68 - 30)}
                 </View>
             </View>
         );
@@ -263,58 +208,9 @@ class ChangePassWord extends Component {
         }
     };
 
-    // /**
-    //  * 获取存储验证码
-    //  * @param input
-    //  * @param flag 标记是否为新旧手机号[true:新手机号, false:旧手机号]
-    //  */
-    // saveVerificationCode = (input, flag: boolean) => {
-    //     let state;
-    //     if (flag) {
-    //         // state = {new_verification_code: input};
-    //     } else {
-    //         // state = {old_verification_code: input};
-    //     }
-    //     this.setState(state);
-    // };
-    //
-    // /**
-    //  * 获取存储手机号
-    //  * @param input
-    //  * @param flag 标记是否为新旧手机号[true:新手机号, false:旧手机号]
-    //  */
-    // savePhone = (input, flag: boolean = false) => {
-    //     let state;
-    //     if (flag) {
-    //         // state = {new_phone: input};
-    //         // this.setState({new_phone: input});
-    //     } else {
-    //         // state = {old_phone: input};
-    //         // this.setState({old_phone: input});
-    //     }
-    //     // this.setState({new_phone: input});
-    // };
-    //
-    // /* 事件触发部分 */
-    // /**
-    //  * 通过网络获取验证码
-    //  * @param flag 标记是否为新旧手机号[true:新手机号, false:旧手机号]
-    //  */
-    // getVerificationCodeByNetWork = (flag: boolean = false) => {
-    //     // let msg;
-    //     // if (flag) {
-    //     //     msg = "新手机" + this.state.new_phone;
-    //     // } else {
-    //     //     msg = "旧手机" + this.state.old_phone;
-    //     // }
-    //
-    //     let b = isPoneAvailable(flag?this.state.new_phone:this.state.old_phone);
-    //
-    //     Alert.alert('是否为手机 : ' + b);
-    // };
-
-
 }
+
+let ITEM_HEIGHT = 48;
 
 const styles = StyleSheet.create({
     container: {
@@ -339,18 +235,60 @@ const styles = StyleSheet.create({
         marginLeft: 16.3,
     },
     header_view_title: {
-        color: titleColor,
+        color: colors.grey_2b,
         fontSize: 17,
     },
     item_phone: {
         marginTop: 54,
         marginBottom: 16,
         fontSize: 15,
-        color: contentColor,
+        color: colors.grey_66,
     },
     getVerification_text: {
         fontSize: 15,
         color: '#FF2E2A',
+    },
+    /* 顶部提交按钮 */
+    submit_title: {
+        fontSize: 15,
+        color: colors.grey_2b,
+        marginRight: 15,
+    },
+    /* 每个横向的 item 容器的风格样式 */
+    item_container_outside: {
+        width: screen.width,
+        height: 50,
+        paddingLeft: 18,
+        paddingRight: 18,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    item_container_inside: {
+        flex: 1,
+        height: ITEM_HEIGHT,
+    },
+    /* 每个横向的 item 的标题的风格样式 */
+    item_title: {
+        width: 68,
+        height: 20,
+        fontSize: 16,
+        marginRight: 13,
+        color: colors.grey_2b,
+    },
+    /* 文字输入 */
+    text_input: {
+        flex: 1,
+        // hintColor: colors.grey_d8,
+        // placeholderTextColor: colors.grey_d8,
+    },
+    /* 文字输入框的直接外层 */
+    item_input_container: {
+        flexDirection: 'row',
+        height: ITEM_HEIGHT - screen.divider
+    },
+    /* 自我居中 */
+    seletCenter: {
+        alignSelf: 'center',
     }
 });
 

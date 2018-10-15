@@ -22,6 +22,7 @@ import draws from '../util/draws';
 import routes from "../routes";
 import Utils from "../util/utils";
 import ChoiceDialog from "../widget/choice_dialog";
+import ImagerPicker from "../widget/choice_photo";
 
 // 性别
 let sexList = [
@@ -40,6 +41,7 @@ class PersonalCenter extends Component {
         this.state = {
             showGenderDialog: false,
             genderSelect: -1,
+            avatarSource: null,
         };
     }
 
@@ -135,11 +137,18 @@ class PersonalCenter extends Component {
     /* 1.头像 */
     renderHeaderView = (data) => {
         let title = '头像';
-        let url = '../../image/placeholder.jpg';
         let action = () => {
-            Utils.alert('头像');
+            ImagerPicker.selectPhotoTapped((response) => {
+                let source = {uri: response.uri};
+                // You can also display the image using data:
+                // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+                this.setState({
+                    avatarSource: source
+                });
+            })
         };
         return (
+
             <View
                 style={styles.item_container}>
                 <Text style={styles.item_title}>{title}</Text>
@@ -151,9 +160,9 @@ class PersonalCenter extends Component {
                     <Image
                         style={styles.item_icon_header}
                         resizeMode='cover'
-                        source={require(url)}
+                        source={this.state.avatarSource}
+                        placeholder={require('../../image/placeholder.jpg')}
                     />
-
                     <Image
                         style={styles.item_icon_more}
                         source={require('../../image/icon_more.png')}/>
@@ -211,7 +220,6 @@ class PersonalCenter extends Component {
 
     /* 性别 */
     renderGenderView = (data) => {
-
         return this.commonItemView('性别', this.getGenderText(), () => {
             this.toggleDialogVisiable(true);
         });

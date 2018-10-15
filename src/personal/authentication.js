@@ -16,16 +16,24 @@ import {
     Alert,
     Modal,
 } from 'react-native';
-import {grey_2b as titleColor} from "../../colos";
 import draws from "../util/draws";
 import Utils from "../util/utils";
 import colors from '../util/colors';
 import screen from '../util/screen_util';
 import ChoiceDialog from "../widget/choice_dialog";
+import ImagerPicker from "../widget/choice_photo";
 
 /* 证件类型 */
 let types = [
     '身份证', '港澳通行证', '驾驶证'
+];
+
+/**
+ * 字段名
+ * @type {string[]}
+ */
+let filedName = [
+    'positive', 'Negative', 'person'
 ];
 
 class Authentication extends Component {
@@ -42,6 +50,9 @@ class Authentication extends Component {
             certificate_name: '',       // 证件名字
             certificate_number: '',     // 证件号码
             showDialog: false,          // 是否事件证件选择的对话框
+            positive: null,// 反面
+            Negative: null,// 正面
+            person: null,// 手持
         };
     }
 
@@ -54,7 +65,8 @@ class Authentication extends Component {
                         onPress={this.submitChange}>
                         <Text
                             style={{
-                                fontSize: 15, color: titleColor,
+                                fontSize: 15,
+                                color: colors.grey_2b,
                                 marginRight: 15,
                             }}
                         >提交</Text>
@@ -137,8 +149,33 @@ class Authentication extends Component {
             }));
     };
 
-    /* 渲染照片上传的按钮按钮 */
-    renderPhotoButton = (text: String, action: Function) => {
+    /**
+     * 渲染照片上传的按钮按钮
+     * @param keyName
+     * @param text 标题显示
+     * @param action 回调动作
+     * @returns {*}
+     */
+    renderPhotoButton = (keyName, text: String, action: Function) => {
+
+        let element = this.state[keyName];
+        if (element !== null) {
+            return (
+                <Image
+                    style={{
+                        width: PHOTO_WIDTH,
+                        height: 155,
+                        backgroundColor: colors.grey_f4,
+                        borderRadius: 6,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                    source={element}
+                    placeholder={require('../../image/placeholder.jpg')}
+                />
+            );
+
+        }
         return (
             <TouchableOpacity
                 onPress={() => {
@@ -192,16 +229,40 @@ class Authentication extends Component {
                         justifyContent: 'space-evenly',
                         marginTop: (screen.width - 2 * PHOTO_WIDTH) / 3,
                     }}>
-                    {this.renderPhotoButton('上传证件照正面', () => {
-                        Utils.alert("选择证件照正面")
+                    {this.renderPhotoButton(filedName[0], '上传证件照正面', () => {
+                        this.showImagerPicker(filedName[0])
                     })}
-                    {this.renderPhotoButton('上传证件照反面', () => {
-                        Utils.alert("选择证件照反面")
+                    {this.renderPhotoButton(filedName[1], '上传证件照反面', () => {
+                        this.showImagerPicker(filedName[1])
                     })}
                 </View>
 
             </View>);
     };
+
+    showImagerPicker = (keyName) => {
+        ImagerPicker.selectPhotoTapped((response) => {
+            let source = {uri: response.uri};
+            switch (keyName) {
+                case filedName[0]:
+                    this.setState({
+                        [filedName[0]]: source,
+                    });
+                    break;
+                case filedName[1]:
+                    this.setState({
+                        [filedName[1]]: source,
+                    });
+                    break;
+                case filedName[2]:
+                    this.setState({
+                        [filedName[2]]: source,
+                    });
+                    break;
+            }
+        })
+    };
+
 
     /* 渲染手持身份证 */
     renderCertificatePhotoWithSelfView = () => {
@@ -221,8 +282,8 @@ class Authentication extends Component {
                         marginTop: 19,
                         marginLeft: 15,
                     }, {marginBottom: 21,}]}>
-                    {this.renderPhotoButton('上传手持身份证照', () => {
-                        Utils.alert("选择手持身份证照")
+                    {this.renderPhotoButton(filedName[2], '上传手持身份证照', () => {
+                        this.showImagerPicker(filedName[2])
                     })}
                 </View>
             </View>);
