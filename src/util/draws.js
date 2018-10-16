@@ -8,10 +8,8 @@ import {
 } from "react-native";
 import screen from "./screen_util";
 import React from "react";
-import {
-    grey_2b as titleColor
-} from "../../colos";
 import Util from "./utils";
+import colors from './colors';
 
 /**
  * 绘制统用的分隔线
@@ -45,7 +43,7 @@ let _styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: (Platform.OS === 'ios' ? 20 : 0),
+        marginTop: screen.verticalOffset,
     },
     /* 顶部返回图标 */
     back_icon: {
@@ -55,7 +53,7 @@ let _styles = StyleSheet.create({
     },
     /* 顶部居中的标题文字 */
     header_view_title: {
-        color: titleColor,
+        color: colors.grey_2b,
         fontSize: 17,
     },
 });

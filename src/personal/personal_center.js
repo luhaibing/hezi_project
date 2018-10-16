@@ -16,13 +16,13 @@ import {
     Alert,
 
 } from 'react-native';
-import {grey_2b as titleColor, grey_66 as contentColor} from '../../colos.json';
 import screen from '../util/screen_util';
 import draws from '../util/draws';
 import routes from "../routes";
 import Utils from "../util/utils";
 import ChoiceDialog from "../widget/choice_dialog";
 import ImagerPicker from "../widget/choice_photo";
+import colors from "../util/colors";
 
 // 性别
 let sexList = [
@@ -323,7 +323,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: (Platform.OS === 'ios' ? 20 : 0),
+        // marginTop: (Platform.OS === 'ios' ? 20 : 0),
+        marginTop: screen.verticalOffset,
     },
 
     /* 顶部返回图标 */
@@ -334,7 +335,7 @@ const styles = StyleSheet.create({
     },
     /* 顶部居中的标题文字 */
     header_view_title: {
-        color: titleColor,
+        color: colors.grey_2b,
         fontSize: 17,
     },
 
@@ -355,20 +356,19 @@ const styles = StyleSheet.create({
     /* 每项的标题 */
     item_title: {
         fontSize: 15,
-        color: titleColor,
+        color: colors.grey_2b,
         marginLeft: 18,
     },
 
     /* 每项的内容 */
     item_content: {
         fontSize: 14,
-        color: contentColor,
+        color: colors.grey_66,
     },
     item_content_text_input: {
         fontSize: 14,
-        color: contentColor,
+        color: colors.grey_66,
     },
-
 
     /* item 中的响应点击区域 */
     touchable_area: {

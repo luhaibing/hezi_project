@@ -13,12 +13,6 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import {
-    grey_2b as titleColor,
-    grey_90 as subtitleColor,
-    grey_66 as contentColor,
-    grey_d8,
-} from "../../colos";
 import colors from '../util/colors';
 import screen from "../util/screen_util";
 import draws from "../util/draws";
@@ -49,7 +43,7 @@ class MyLevel extends Component {
                     {draws.drawDivider()}
                     <Text style={{
                         fontsize: 15,
-                        color: titleColor,
+                        color: colors.grey_2b,
                         marginLeft: 15,
                         marginTop: 13,
                         height: 21
@@ -88,7 +82,7 @@ class MyLevel extends Component {
 
                 <Text style={{
                     fontsize: 17,
-                    color: titleColor,
+                    color: colors.grey_2b,
                 }}>{userName}</Text>
             </View>
         );
@@ -108,13 +102,13 @@ class MyLevel extends Component {
                 <Text style={{
                     height: 21,
                     fontsize: 15,
-                    color: titleColor,
+                    color: colors.grey_2b,
                     marginLeft: 16,
                 }}>等级</Text>
                 <Text style={{
                     height: 20,
                     fontsize: 14,
-                    color: subtitleColor,
+                    color: colors.grey_90,
                     marginLeft: 16,
                     marginTop: 4,
                 }}
@@ -128,14 +122,14 @@ class MyLevel extends Component {
                     marginLeft: 18,
                     marginRight: 18,
                     marginTop: 0,
-                    backgroundColor: grey_d8,
+                    backgroundColor: colors.grey_d8,
                 }}>
                     <View
                         style={{
                             width: screen.width - 18 * 2,
                             height: 4,
                             borderRadius: 2,
-                            backgroundColor: grey_d8,
+                            backgroundColor: colors.grey_d8,
                         }}>
                         <LinearGradient
                             colors={
@@ -243,12 +237,12 @@ const styles = StyleSheet.create({
     list_first_text: {
         height: 21,
         fontSize: 15,
-        color: contentColor,
+        color: colors.grey_66,
     },
     list_other_text: {
         height: 20,
         fontSize: 14,
-        color: contentColor,
+        color: colors.grey_66,
         marginTop: 2,
         marginBottom: 5,
         marginRight: 2,

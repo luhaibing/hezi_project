@@ -226,7 +226,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: (Platform.OS === 'ios' ? 20 : 0),
+        // marginTop: (Platform.OS === 'ios' ? 20 : 0),
+        marginTop: screen.verticalOffset,
     },
     /* 顶部返回图标 */
     back_icon: {

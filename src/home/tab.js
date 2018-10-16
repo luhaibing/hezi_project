@@ -168,13 +168,13 @@ const styles = StyleSheet.create({
         // height: top_navigation_height,
     },
     linearGradient: {
-        height: top_navigation_height + (Platform.OS === "ios" ? 30 : 0),
+        height: top_navigation_height + screen.verticalOffset,
         left: 0,
         top: 0,
         width: screen.width,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingTop: (Platform.OS === "ios" ? 30 : 0)
+        paddingTop: screen.verticalOffset,
     },
     top_navigation_icon_search: {
         width: 17.3,

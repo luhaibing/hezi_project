@@ -14,16 +14,17 @@ import {
     DeviceEventEmitter,
 } from 'react-native';
 import screen from "../util/screen_util";
-import {
-    /* 标题颜色 */
-    grey_2b as titleColor,
-    /* 内容颜色 */
-    grey_66 as contentColor,
-    grey_ec,
-} from "../../colos";
+// import {
+//     /* 标题颜色 */
+//     grey_2b as titleColor,
+//     /* 内容颜色 */
+//     grey_66 as contentColor,
+//     grey_ec,
+// } from "../../colos";
 import draws from "../util/draws";
 import DownLoadButton from '../widget/download_button';
 import Utils from "../util/utils";
+import colors from "../util/colors";
 
 class TreasureChest extends Component {
 
@@ -95,12 +96,12 @@ class TreasureChest extends Component {
                         }}>
                         <Text style={{
                             fontSize: 15,
-                            color: titleColor,
+                            color: colors.grey_2b,
                         }}>金色财经</Text>
                         <Text
                             style={{
                                 fontSize: 13,
-                                color: contentColor,
+                                color: colors.grey_66,
                                 marginTop: 5
                             }}>
                             最牛的比特币APP，赶快上车吧</Text>
@@ -111,15 +112,15 @@ class TreasureChest extends Component {
 
                             <Text style={{
                                 fontSize: 11,
-                                color: contentColor,
+                                color: colors.grey_66,
                             }}>55W下载量 自媒体</Text>
                             {/*<Text style={{*/}
                             {/*fontSize: 11,*/}
-                            {/*color: contentColor,*/}
+                            {/*color: colors.grey_66,*/}
                             {/*}}>55W下载量</Text>*/}
                             {/*<Text style={{*/}
                             {/*fontSize: 11,*/}
-                            {/*color: contentColor,*/}
+                            {/*color: colors.grey_66,*/}
                             {/*marginLeft: 16*/}
                             {/*}}>自媒体</Text>*/}
                         </View>
@@ -163,7 +164,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: (Platform.OS === 'ios' ? 20 : 0),
+        // marginTop: (Platform.OS === 'ios' ? 20 : 0),
+        marginTop: screen.verticalOffset,
     },
     /* 顶部返回图标 */
     back_icon: {
@@ -177,7 +179,7 @@ const styles = StyleSheet.create({
     }
     ,
     header_view_title: {
-        color: titleColor,
+        color: colors.grey_2b,
         fontSize:
             17,
     }
